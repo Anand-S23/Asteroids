@@ -1,0 +1,4 @@
+#include "common.h"
+#include <SDL_Image.h>
+
+extern App app;
