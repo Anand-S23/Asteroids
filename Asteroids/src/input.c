@@ -1,3 +1,5 @@
+#include "input.h"
+
 // Input loop
 void doKeyDown(SDL_KeyboardEvent* event)
 {

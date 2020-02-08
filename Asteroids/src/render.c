@@ -1,3 +1,5 @@
+#include "render.h"
+
 // Darwing
 void prepareScene(void)
 {

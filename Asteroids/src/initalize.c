@@ -1,3 +1,5 @@
+#include "initalize.h"
+
 // Starts up SDL
 void CreateWindow(screenWidth, screenHeight)
 {
