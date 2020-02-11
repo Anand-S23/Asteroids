@@ -20,16 +20,16 @@ typedef struct {
 } App;
 
 typedef struct {
-    double x;
-    double y;
+    int x;
+    int y;
     double angle;
     int health;
     SDL_Texture *texture;
 } Entity;
 
 typedef struct {
-    double x; 
-    double y; 
+    int x; 
+    int y; 
     double angle; 
     int size;
     int health;

@@ -5,25 +5,35 @@
 #define SCREEN_WIDTH   1280
 #define SCREEN_HEIGHT  720
 
-void handleMovement(Entity* player, App* app)
+void handleMovement()
 {
 	// Player movement 
-	if (app->up)
+	if (app.up)
 	{
-		player->y -= 4;
+       	    player.y -= 4;
 	}
-	if (app->down)
+	if (app.down)
 	{
-		player->y += 4;
+       	     player.y += 4;
 	}
-	if (app->right)
+	if (app.right)
 	{
-		player->x += 4; 
+	    player.x += 4; 
 	}
-		if (app->left)
+	if (app.left)
 	{
-		player->x -= 4;
+	    player.x -= 4;
 	}
+}
+
+void initGame()
+{
+     player.x = SCREEN_WIDTH / 2;
+     player.y = (3 * SCREEN_HEIGHT) / 4;
+     player.angle = -90;
+     player.health = 100; 
+     player.texture = loadTexture("assests/player.png");
+
 }
 
 // Main Loop 
@@ -33,40 +43,18 @@ int main(int argc, char* argv)
     memset(&player, 0, sizeof(Entity));
     
     CreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-    player.x = 100;
-    player.y = 100;
-    player.texture = loadTexture("assests/player.png");
+    initGame();
 	
     atexit(cleanup);
 	
     while (1)
     {
         prepareScene();
-		doInput();
-		handleMovement(player);
-
-/*		if (app.up)
-		{
-			player.y -= 4;
-		}
-		if (app.down)
-		{
-			player.y += 4;
-		}
-		if (app.right)
-		{
-			player.x += 4; 
-		}
-			if (app.left)
-		{
-			player.x -= 4;
-		}
-
-*/
-		blit(player.texture, player.x, player.y);
-        presentScene();		
-		SDL_Delay(16);
+	doInput();
+	handleMovement();
+	blit(player.texture, player.x, player.y);
+	presentScene();
+	SDL_Delay(16);
     }
 
     return 0;
