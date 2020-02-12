@@ -1,7 +1,7 @@
 #include "initalize.h"
 
 // Starts up SDL
-void CreateWindow(screenWidth, screenHeight)
+void CreateWindow(char* name, int screenWidth, int screenHeight)
 {
 	int rendererFlags, windowFlags;
 	rendererFlags = SDL_RENDERER_ACCELERATED;
@@ -13,7 +13,7 @@ void CreateWindow(screenWidth, screenHeight)
 		exit(1);
 	}
 
-	app.window = SDL_CreateWindow("Shooter 01", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlags);
+	app.window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, windowFlags);
 	
 	if (!app.window)
 	{

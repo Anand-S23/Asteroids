@@ -1,7 +1,7 @@
 #include "common.h"
 
 extern void cleanup(void);
-extern void CreateWindow(int width, int height);
+extern void CreateWindow(char* name, int width, int height);
 extern void prepareScene(void);
 extern void presentScene(void);
 extern void doInput(void);
