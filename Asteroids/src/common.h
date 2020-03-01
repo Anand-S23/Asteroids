@@ -4,11 +4,18 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+#include <time.h> 
 
 // SDL2
 #include "SDL.h"
 #include "SDL_image.h"
  
+// Definition 
+#define SCREEN_WIDTH   1280
+#define SCREEN_HEIGHT  720
+
+#define MAX_AST 100
+
 // Structs
 typedef struct {
     SDL_Renderer *renderer;
@@ -34,4 +41,4 @@ typedef struct {
     int size;
     int health;
     SDL_Texture *texture;
-} Asteriod;
+} Asteroid;

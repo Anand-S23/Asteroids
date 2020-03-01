@@ -5,8 +5,13 @@ extern void CreateWindow(char* name, int width, int height);
 extern void prepareScene(void);
 extern void presentScene(void);
 extern void doInput(void);
-extern void blit(SDL_Texture* texture, int x, int y);
+extern void blit(SDL_Texture* texture, double x, double y);
+extern void blitRotated(SDL_Texture* texture, double x, double y, double angle);
 extern SDL_Texture* loadTexture(char* file);
+extern void createAsteroid(Asteroid* ast[], int size);
+extern randRange(int start, int end, int neg);
 
 App app;
 Entity player;
+
+Asteroid* asteroids[MAX_AST] = { NULL };
