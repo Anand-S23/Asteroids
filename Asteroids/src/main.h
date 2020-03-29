@@ -9,7 +9,7 @@ extern void blit(SDL_Texture* texture, double x, double y);
 extern void blitRotated(SDL_Texture* texture, double x, double y, double angle);
 extern SDL_Texture* loadTexture(char* file);
 extern void createAsteroid(Asteroid* ast[], int size);
-extern randRange(int start, int end, int neg);
+extern int randRange(int start, int end);
 
 App app;
 Entity player;

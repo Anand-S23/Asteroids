@@ -1,7 +1,11 @@
 #include "math.h"
 
-int randRange(int start, int end)
+int randInt(int start, int end)
 {
-    srand(time(NULL));
-    return (rand() % (end - start + 1));
+    return ((rand() % (end - start + 1)) + start);
+}
+
+double randDouble(int start, int end)
+{ 
+    return (double)((rand() % (end - start + 1)) + start);
 }
