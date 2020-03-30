@@ -1,5 +1,6 @@
 #include "asteroid.h"
 
+// Asteroid
 void createAsteroid(Asteroid* ast[], int size)
 {
     int pos = -1;
@@ -46,4 +47,34 @@ void destroyAsteroid(Asteroid* ast[], int pos)
 {
     free(ast[pos]);
     ast[pos] = NULL;
+}
+
+// Bullets 
+void createBullet(Bullet* bullets[], double  x, double y, double angle)
+{
+    int pos = -1;
+    for (int i = 0; i < MAX_BULLETS; ++i)
+    {
+        if (bullets[i] == NULL)
+        {
+            pos = i;
+            break;
+        }
+    }
+
+    if (pos >= 0)
+    {
+        bullets[pos] = malloc(sizeof(Bullet));
+        bullets[pos]->x = x; 
+        bullets[pos]->y = y; 
+        bullets[pos]->angle = angle; 
+        bullets[pos]->health = 1; 
+        bullets[pos]->texture = loadTexture("assests/laser.png");
+    }
+}
+
+void destroyBullet(Bullet* bullets[], int pos)
+{
+    free(bullets[pos]);
+    bullets[pos] = NULL;
 }

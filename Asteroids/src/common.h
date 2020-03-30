@@ -15,6 +15,7 @@
 #define SCREEN_HEIGHT  720
 
 #define MAX_AST 1000
+#define MAX_BULLETS 500
 #define RAD 3.14159265/180.0
 
 // Structs
@@ -25,6 +26,7 @@ typedef struct{
     int down;
     int right;
     int left;
+    int space;
 } App;
 
 typedef struct{
@@ -43,11 +45,10 @@ typedef struct{
     SDL_Texture *texture;
 } Asteroid;
 
-/*
 typedef struct bullet{
     double x, y;
     double angle; 
     int health; 
     SDL_Texture *texture; 
 } Bullet;
-*/
+

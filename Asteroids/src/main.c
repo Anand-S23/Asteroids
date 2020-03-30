@@ -8,9 +8,9 @@ void initGame()
     CreateWindow("Asteroids", SCREEN_WIDTH, SCREEN_HEIGHT);
     player.x = SCREEN_WIDTH / 2;
     player.y = (3 * SCREEN_HEIGHT) / 4;
-    player.angle = -90.0;
+    player.angle = 0.0;
     player.health = 100; 
-    player.texture = loadTexture("assests/player.png");
+    player.texture = loadTexture("assests/playerShip2_blue.png");
 
     for (int i = 0; i < 8; ++i) 
     {
@@ -28,13 +28,15 @@ void handleMovement()
 	// Player movement 
 	if (app.up)
     {
-       	player.y += 4.0*sin(player.angle*RAD);
-        player.x += 4.0*cos(player.angle*RAD);
+       	player.y -= 4.0*cos(player.angle*RAD);
+        player.x += 4.0*sin(player.angle*RAD);
     }
 	if (app.right)
 	    player.angle += 1.0; 
 	if (app.left)
 	    player.angle -= 1.0;
+    if (app.space)
+        createBullet(bullets, player.x, player.y, player.angle);
 
     if (player.angle < -180.0)
         player.angle = 180.0;
@@ -50,6 +52,19 @@ void handleMovement()
         player.y = SCREEN_HEIGHT;
     if (player.y > SCREEN_HEIGHT)
         player.y = 0.0;
+
+    // loop through to update the Bullets
+    for (int i = 0; i < MAX_BULLETS; ++i)
+    {
+        if (bullets[i])
+        {
+            bullets[i]->x -= 2.0*cos(bullets[i]->angle*RAD);
+            bullets[i]->y += 2.0*sin(bullets[i]->angle*RAD);
+
+            if (bullets[i]->x < 0 || bullets[i]->x > SCREEN_WIDTH || bullets[i]->y < 0 || bullets[i]->y > SCREEN_HEIGHT)
+                destroyBullet(bullets, i);
+        }
+    }
 
 	//loop through to update the Asteroids
     for (int i = 0; i < MAX_AST; ++i)
@@ -74,6 +89,13 @@ void handleMovement()
 
 void update()
 {
+    for (int i = 0; i < MAX_BULLETS; ++i)
+    {
+        if (bullets[i])
+        {
+            blitRotated(bullets[i]->texture, bullets[i]->x, bullets[i]->y, bullets[i]->angle);
+        }
+    }
     blitRotated(player.texture, player.x, player.y, player.angle);
 
     // loop through the list of Asteroid and blit

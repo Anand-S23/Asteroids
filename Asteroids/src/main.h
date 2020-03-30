@@ -9,9 +9,13 @@ extern void blit(SDL_Texture* texture, double x, double y);
 extern void blitRotated(SDL_Texture* texture, double x, double y, double angle);
 extern SDL_Texture* loadTexture(char* file);
 extern void createAsteroid(Asteroid* ast[], int size);
+extern void createBullet(Bullet* bullets[], double x, double y, double angle);
+extern void destroyAsteroid(Asteroid* ast[], int pos);
+extern void destroyBullet(Bullet* bullets[], int pos);
 extern int randRange(int start, int end);
 
 App app;
 Entity player;
 
 Asteroid* asteroids[MAX_AST] = { NULL };
+Bullet* bullets [MAX_BULLETS] = { NULL };
