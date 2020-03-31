@@ -14,12 +14,12 @@
 #define SCREEN_WIDTH   1280
 #define SCREEN_HEIGHT  720
 
-#define MAX_AST 1000
-#define MAX_BULLETS 500
+#define MAX_AST 30
+#define MAX_BULLETS 5
 #define RAD 3.14159265/180.0
 
 // Structs
-typedef struct{
+typedef struct {
     SDL_Renderer *renderer;
     SDL_Window *window;
     int up;
@@ -27,9 +27,10 @@ typedef struct{
     int right;
     int left;
     int space;
+    int screen;
 } App;
 
-typedef struct{
+typedef struct entity {
     double x, y;
     double angle;
     int health;
@@ -41,14 +42,12 @@ typedef struct{
     double angle; 
     double dx, dy;
     int size;
-    int health;
     SDL_Texture *texture;
 } Asteroid;
 
 typedef struct bullet{
     double x, y;
     double angle; 
-    int health; 
     SDL_Texture *texture; 
 } Bullet;
 

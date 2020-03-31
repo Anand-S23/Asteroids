@@ -3,24 +3,29 @@
 
 void initGame()
 {
+    // seeds the rand with time
     srand(time(NULL));
 
     CreateWindow("Asteroids", SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    // Initializes the player
     player.x = SCREEN_WIDTH / 2;
     player.y = (3 * SCREEN_HEIGHT) / 4;
     player.angle = 0.0;
     player.health = 100; 
     player.texture = loadTexture("assests/playerShip2_blue.png");
 
+    // Creates the initial asteroids -> 8 random (big or med) and 2 small
     for (int i = 0; i < 8; ++i) 
     {
         int size = randInt(1, 2);
         createAsteroid(asteroids, size);
-        //printf("Pos: %d, Size: %d\n", i, size);
     }
 
     for (int i = 0; i < 2; ++i)
+    {
         createAsteroid(asteroids, 0);
+    }
 }
 
 void handleMovement()
@@ -32,18 +37,26 @@ void handleMovement()
         player.x += 4.0*sin(player.angle*RAD);
     }
 	if (app.right)
-	    player.angle += 1.0; 
-	if (app.left)
-	    player.angle -= 1.0;
+    {
+	    player.angle += 2.0; 
+    }
+    if (app.left)
+    {
+	    player.angle -= 2.0;
+    }
     if (app.space)
+    {
         createBullet(bullets, player.x, player.y, player.angle);
+        app.space = 0;
+    }
 
+    // Fixes the angles, so the angles don't increase to decrease to large numbers
     if (player.angle < -180.0)
         player.angle = 180.0;
     if (player.angle > 180.0)
         player.angle = -180.0; 
 
-
+    // Keeps payer on screen
     if (player.x < 0.0)
         player.x = SCREEN_WIDTH;
     if (player.x > SCREEN_WIDTH)
@@ -58,15 +71,15 @@ void handleMovement()
     {
         if (bullets[i])
         {
-            bullets[i]->x -= 2.0*cos(bullets[i]->angle*RAD);
-            bullets[i]->y += 2.0*sin(bullets[i]->angle*RAD);
+            bullets[i]->x += (6.0*sin(bullets[i]->angle*RAD));
+            bullets[i]->y -= (6.0*cos(bullets[i]->angle*RAD));
 
             if (bullets[i]->x < 0 || bullets[i]->x > SCREEN_WIDTH || bullets[i]->y < 0 || bullets[i]->y > SCREEN_HEIGHT)
                 destroyBullet(bullets, i);
         }
     }
 
-	//loop through to update the Asteroids
+	// loop through to update the Asteroids
     for (int i = 0; i < MAX_AST; ++i)
     {
         if (asteroids[i])
@@ -74,7 +87,7 @@ void handleMovement()
             asteroids[i]->angle += 0.9;
             asteroids[i]->x += asteroids[i]->dx;
             asteroids[i]->y += asteroids[i]->dy;
-            //printf("%lf %lf\n", asteroids[i]->x, asteroids[i]->y);
+    
             if (asteroids[i]->dx < 0 && asteroids[i]->x < 0)
                 asteroids[i]->x = (double) SCREEN_WIDTH;
             if (asteroids[i]->dx > 0 && asteroids[i]->x > SCREEN_WIDTH)
@@ -85,10 +98,41 @@ void handleMovement()
                 asteroids[i]->y = 0.0;
         }
     }
+
+    // Collions
+    // for (int i = 0; i < MAX_AST; ++i)
+    // {
+    //     for (int j = 0; j < MAX_BULLETS; ++j)
+    //     {
+    //         if (bullets[j]->x == asteroids[i]->x && bullets[j]->y == asteroids[i]->y)
+    //         {
+    //             int size = asteroids[i]->size;
+
+    //             destroyBullet(bullets, j);
+    //             destroyAsteroid(asteroids, i);
+
+    //             if (size > 0)
+    //             {
+    //                 createAsteroid(asteroids, size - 1);
+    //                 createAsteroid(asteroids, size - 1);
+    //             }
+    //         }
+    //     }
+
+
+    //     if (player.x == asteroids[i]->x && player.y == asteroids[i]->y)
+    //     {
+    //         printf("Hit\n");
+    //         player.health -= 5;
+    //     }
+    // }
 }
 
-void update()
+void update(SDL_Texture* bgImg)
 {
+    // Blits the bg, bullets, player and asteroids in that order
+    blitRotated(bgImg, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
+
     for (int i = 0; i < MAX_BULLETS; ++i)
     {
         if (bullets[i])
@@ -96,6 +140,7 @@ void update()
             blitRotated(bullets[i]->texture, bullets[i]->x, bullets[i]->y, bullets[i]->angle);
         }
     }
+
     blitRotated(player.texture, player.x, player.y, player.angle);
 
     // loop through the list of Asteroid and blit
@@ -108,6 +153,18 @@ void update()
     }
 }
 
+void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
+{
+    blit(bgImg, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+    blit(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+
+    if (app.space == 1)
+    {
+        app.space = 0; 
+        app.screen = 1;
+    }
+}
+
 // Main Loop 
 int main(int argc, char* argv)
 {
@@ -115,17 +172,32 @@ int main(int argc, char* argv)
     memset(&player, 0, sizeof(Entity));
 
     initGame();
+    SDL_Texture* title = loadTexture("assests/title.png");
+    SDL_Texture* bgImg = loadTexture("assests/space-2.png");
+    app.screen = 1;
 	
     atexit(cleanup);
 	
     while (1)
     {
-        prepareScene();
-		doInput();
-		handleMovement();
-		update();
-		presentScene();
-		SDL_Delay(16);
+        switch(app.screen)
+        {
+            case 0: 
+                prepareScene();
+                doInput();
+                gameMenu(bgImg, title);
+                presentScene();
+                SDL_Delay(16);
+                break;
+            case 1:
+                prepareScene();
+                doInput();
+                handleMovement();
+                update(bgImg);
+                presentScene();
+                SDL_Delay(16);
+                break;
+        }
     }
 
     return 0;

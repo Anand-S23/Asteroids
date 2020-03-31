@@ -23,7 +23,7 @@ void doKeyDown(SDL_KeyboardEvent* event)
 	    }
 		if (event->keysym.scancode == SDL_SCANCODE_SPACE)
 	    {
-			app.space = 1; 
+			app.space = 1;  
 	    }
     }
 }
