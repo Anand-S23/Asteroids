@@ -46,6 +46,21 @@ void blitRotated(SDL_Texture* texture, double x, double y, double angle)
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
     dest.x -= (dest.w / 2);
     dest.y -= (dest.h / 2);
-
+	
     SDL_RenderCopyEx(app.renderer, texture, NULL, &dest, angle, NULL, SDL_FLIP_NONE);
+}
+
+
+void blitPlayer(SDL_Texture* texture, double x, double y, double angle)
+{
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+    SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+    dest.x -= (dest.w / 2);
+    dest.y -= 10;
+
+	SDL_Point rotate = {dest.w/2, 10};
+	
+    SDL_RenderCopyEx(app.renderer, texture, NULL, &dest, angle, &rotate, SDL_FLIP_NONE);
 }

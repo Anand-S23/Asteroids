@@ -38,11 +38,11 @@ void handleMovement()
     }
 	if (app.right)
     {
-	    player.angle += 2.0; 
+	    player.angle += 2.5; 
     }
     if (app.left)
     {
-	    player.angle -= 2.0;
+	    player.angle -= 2.5;
     }
     if (app.space)
     {
@@ -57,13 +57,13 @@ void handleMovement()
         player.angle = -180.0; 
 
     // Keeps payer on screen
-    if (player.x < 0.0)
+    if (player.x < -20.0)
         player.x = SCREEN_WIDTH;
-    if (player.x > SCREEN_WIDTH)
+    if (player.x > SCREEN_WIDTH+20)
         player.x = 270.0;
-    if (player.y < 0.0)
+    if (player.y < -20.0)
         player.y = SCREEN_HEIGHT;
-    if (player.y > SCREEN_HEIGHT)
+    if (player.y > SCREEN_HEIGHT+20)
         player.y = 0.0;
 
     // loop through to update the Bullets
@@ -88,13 +88,13 @@ void handleMovement()
             asteroids[i]->x += asteroids[i]->dx;
             asteroids[i]->y += asteroids[i]->dy;
     
-            if (asteroids[i]->dx < 0 && asteroids[i]->x < 0)
+            if (asteroids[i]->dx < 0 && asteroids[i]->x < -30)
                 asteroids[i]->x = (double) SCREEN_WIDTH;
-            if (asteroids[i]->dx > 0 && asteroids[i]->x > SCREEN_WIDTH)
+            if (asteroids[i]->dx > 0 && asteroids[i]->x > SCREEN_WIDTH+30)
                 asteroids[i]->x = 0.0;
-            if (asteroids[i]->dy < 0 && asteroids[i]->y < 0)
+            if (asteroids[i]->dy < 0 && asteroids[i]->y < -30)
                 asteroids[i]->y = (double) SCREEN_HEIGHT;
-            if (asteroids[i]->dy > 0 && asteroids[i]->y > SCREEN_HEIGHT)
+            if (asteroids[i]->dy > 0 && asteroids[i]->y > SCREEN_HEIGHT+30)
                 asteroids[i]->y = 0.0;
         }
     }
@@ -131,7 +131,8 @@ void handleMovement()
 void update(SDL_Texture* bgImg)
 {
     // Blits the bg, bullets, player and asteroids in that order
-    blitRotated(bgImg, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
+    SDL_Rect dstrect = { 0, 0, 1280, 720 };
+    SDL_RenderCopy(app.renderer, bgImg, NULL, &dstrect);
 
     for (int i = 0; i < MAX_BULLETS; ++i)
     {
@@ -140,8 +141,8 @@ void update(SDL_Texture* bgImg)
             blitRotated(bullets[i]->texture, bullets[i]->x, bullets[i]->y, bullets[i]->angle);
         }
     }
-
-    blitRotated(player.texture, player.x, player.y, player.angle);
+  
+    blitPlayer(player.texture, player.x, player.y, player.angle);
 
     // loop through the list of Asteroid and blit
     for (int i = 0; i < MAX_AST; ++i)
@@ -155,7 +156,8 @@ void update(SDL_Texture* bgImg)
 
 void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
 {
-    blit(bgImg, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+    SDL_Rect dstrect = { 0, 0, 1280, 720 };
+    SDL_RenderCopy(app.renderer, bgImg, NULL, &dstrect);
     blit(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
 
     if (app.space == 1)

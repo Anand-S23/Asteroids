@@ -7,6 +7,7 @@ extern void presentScene(void);
 extern void doInput(void);
 extern void blit(SDL_Texture* texture, double x, double y);
 extern void blitRotated(SDL_Texture* texture, double x, double y, double angle);
+extern void blitPlayer(SDL_Texture* texture, double x, double y, double angle);
 extern SDL_Texture* loadTexture(char* file);
 extern void createAsteroid(Asteroid* ast[], int size);
 extern void createBullet(Bullet* bullets[], double x, double y, double angle);
