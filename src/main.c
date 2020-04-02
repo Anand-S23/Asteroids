@@ -128,7 +128,7 @@ void handleMovement()
     // }
 }
 
-void update(SDL_Texture* bgImg)
+void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green)
 {
     // Blits the bg, bullets, player and asteroids in that order
     blit(bgImg, 0, 0, 1280, 720);
@@ -152,8 +152,8 @@ void update(SDL_Texture* bgImg)
         }
     }
 
-    rect(10, player.health, 100-player.health, 20, 255, 0, 0);
-    rect(10, 10, player.health, 20, 0, 128, 0);
+    blitRotated(health, 75.0, 20.0, 0.0);
+    blit(green, 39, 10, player.health, 20);
 }
 
 void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
@@ -177,6 +177,8 @@ int main(int argc, char* argv)
     initGame();
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
+    SDL_Texture* health = loadTexture("assests/health.png");
+    SDL_Texture* green = loadTexture("assests/green.png");
     app.screen = 0;
 	
     atexit(cleanup);
@@ -196,9 +198,11 @@ int main(int argc, char* argv)
                 prepareScene();
                 doInput();
                 handleMovement();
-                update(bgImg);
+                update(bgImg, health, green);
                 presentScene();
                 SDL_Delay(16);
+                break;
+            case 2: 
                 break;
         }
     }
