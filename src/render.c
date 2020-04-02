@@ -20,22 +20,17 @@ SDL_Texture *loadTexture(char *filename)
 
 	texture = IMG_LoadTexture(app.renderer, filename);
 	if (texture == NULL)
-        {
+    {
 	    printf("%s\n", SDL_GetError());
 	}
 	 
 	return texture;
 }
 
-void blit(SDL_Texture *texture, int x, int y)
+void blit(SDL_Texture* texture, int x, int y, int width, int height)
 {
-	SDL_Rect dest;
-	
-	dest.x = x;
-	dest.y = y;
-	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-	
-	SDL_RenderCopy(app.renderer, texture, NULL, &dest);
+	SDL_Rect dstrect = { x, y, width, height };
+    SDL_RenderCopy(app.renderer, texture, NULL, &dstrect);
 }
 
 void blitRotated(SDL_Texture* texture, double x, double y, double angle)
@@ -58,9 +53,20 @@ void blitPlayer(SDL_Texture* texture, double x, double y, double angle)
     dest.y = y;
     SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
     dest.x -= (dest.w / 2);
-    dest.y -= 10;
+    dest.y -= 0;
 
-	SDL_Point rotate = {dest.w/2, 10};
+	SDL_Point rotate = {dest.w/2, 0};
 	
     SDL_RenderCopyEx(app.renderer, texture, NULL, &dest, angle, &rotate, SDL_FLIP_NONE);
+}
+
+void rect(int x, int y, int w, int h, int r, int g, int b)
+{
+	SDL_Rect rect = {x, y, w, h};
+
+    SDL_SetRenderDrawColor(app.renderer, r, g, b, 255);
+    SDL_RenderDrawRect(app.renderer, &rect);
+	SDL_RenderFillRect(app.renderer, &rect);
+
+    SDL_RenderPresent(app.renderer);
 }

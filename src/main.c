@@ -131,8 +131,7 @@ void handleMovement()
 void update(SDL_Texture* bgImg)
 {
     // Blits the bg, bullets, player and asteroids in that order
-    SDL_Rect dstrect = { 0, 0, 1280, 720 };
-    SDL_RenderCopy(app.renderer, bgImg, NULL, &dstrect);
+    blit(bgImg, 0, 0, 1280, 720);
 
     for (int i = 0; i < MAX_BULLETS; ++i)
     {
@@ -152,13 +151,15 @@ void update(SDL_Texture* bgImg)
             blitRotated(asteroids[i]->texture, asteroids[i]->x, asteroids[i]->y, asteroids[i]->angle);
         }
     }
+
+    rect(10, player.health, 100-player.health, 20, 255, 0, 0);
+    rect(10, 10, player.health, 20, 0, 128, 0);
 }
 
 void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
 {
-    SDL_Rect dstrect = { 0, 0, 1280, 720 };
-    SDL_RenderCopy(app.renderer, bgImg, NULL, &dstrect);
-    blit(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0);
+    blit(bgImg, 0, 0, 1280, 720);
+    blitRotated(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
 
     if (app.space == 1)
     {
@@ -176,7 +177,7 @@ int main(int argc, char* argv)
     initGame();
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
-    app.screen = 1;
+    app.screen = 0;
 	
     atexit(cleanup);
 	

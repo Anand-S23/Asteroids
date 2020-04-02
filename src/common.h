@@ -15,7 +15,7 @@
 #define SCREEN_HEIGHT  720
 
 #define MAX_AST 30
-#define MAX_BULLETS 5
+#define MAX_BULLETS 15
 #define RAD 3.14159265/180.0
 
 // Structs
