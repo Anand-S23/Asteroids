@@ -98,12 +98,19 @@ void handleMovement()
                 asteroids[i]->y = 0.0;
         }
     }
+}
 
+void collisions()
+{
     // Collions
-    // for (int i = 0; i < MAX_AST; ++i)
-    // {
-    //     for (int j = 0; j < MAX_BULLETS; ++j)
-    //     {
+    for (int i = 0; i < MAX_AST; ++i)
+    {
+        for (int j = 0; j < MAX_BULLETS; ++j)
+        {
+            if (bulletCollision(asteroids[i], bullets[j]))
+            {
+                printf("Collision\n");
+            }
     //         if (bullets[j]->x == asteroids[i]->x && bullets[j]->y == asteroids[i]->y)
     //         {
     //             int size = asteroids[i]->size;
@@ -124,11 +131,11 @@ void handleMovement()
     //     {
     //         printf("Hit\n");
     //         player.health -= 5;
-    //     }
-    // }
+        }
+    }
 }
 
-void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green)
+void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green, SDL_Texture* red)
 {
     // Blits the bg, bullets, player and asteroids in that order
     blit(bgImg, 0, 0, 1280, 720);
@@ -152,8 +159,9 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green)
         }
     }
 
-    blitRotated(health, 75.0, 20.0, 0.0);
-    blit(green, 39, 10, player.health, 20);
+    blitRotated(health, 25.0, 25.0, 0.0);
+    blit(red, 48, 8, 102*3, 34);
+    blit(green, 51, 10, player.health*3, 30);
 }
 
 void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
@@ -177,8 +185,9 @@ int main(int argc, char* argv)
     initGame();
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
-    SDL_Texture* health = loadTexture("assests/health.png");
+    SDL_Texture* health = loadTexture("assests/heart.png");
     SDL_Texture* green = loadTexture("assests/green.png");
+    SDL_Texture* red = loadTexture("assests/red.png");
     app.screen = 0;
 	
     atexit(cleanup);
@@ -198,7 +207,8 @@ int main(int argc, char* argv)
                 prepareScene();
                 doInput();
                 handleMovement();
-                update(bgImg, health, green);
+                update(bgImg, health, green, red);
+                //collisions();
                 presentScene();
                 SDL_Delay(16);
                 break;

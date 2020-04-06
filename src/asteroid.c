@@ -111,3 +111,37 @@ void destroyBullet(Bullet* bullets[], int pos)
     free(bullets[pos]);
     bullets[pos] = NULL;
 }
+
+// checks bullet and asteroid collisions 
+int bulletCollision(Asteroid* ast, Bullet* bullet)
+{
+    SDL_Rect a, b;
+
+    SDL_QueryTexture(ast->texture, NULL, NULL, &a.w, &a.h);
+    SDL_QueryTexture(bullet->texture, NULL, NULL, &b.w, &b.h);
+
+    double aTop = ast->y - a.h;
+    double aBot = ast->y + a.h;
+    double aLeft = ast->x - a.w;
+    double aRight = ast->x + a.w;
+    double bTop = ast->y - b.h;
+    double bBot = ast->y + b.h;
+    double bLeft = ast->x - b.w;
+    double bRight = ast->x + b.w;
+
+    if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
+    {
+        if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// checks asteroid and player collisons
+void playerCollision()
+{
+
+}
