@@ -16,6 +16,7 @@ extern void destroyAsteroid(Asteroid* ast[], int pos);
 extern void destroyBullet(Bullet* bullets[], int pos);
 extern int randRange(int start, int end);
 extern int bulletCollision(Asteroid* ast, Bullet* bullet);
+int playerCollision(Asteroid* ast, Entity player);
 
 App app;
 Entity player;

@@ -124,24 +124,48 @@ int bulletCollision(Asteroid* ast, Bullet* bullet)
     double aBot = ast->y + a.h;
     double aLeft = ast->x - a.w;
     double aRight = ast->x + a.w;
-    double bTop = ast->y - b.h;
-    double bBot = ast->y + b.h;
-    double bLeft = ast->x - b.w;
-    double bRight = ast->x + b.w;
+    double bTop = bullet->y - b.h;
+    double bBot = bullet->y + b.h;
+    double bLeft = bullet->x - b.w;
+    double bRight = bullet->x + b.w;
 
-    if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
+
+    // if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
+    // {
+    //     if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
+    //     {
+    //         return 1;
+    //     }
+    // }
+
+    return 1;
+}
+
+// checks asteroid and player collisons
+int playerCollision(Asteroid* ast, Entity player)
+{
+    SDL_Rect a, p;
+
+    SDL_QueryTexture(ast->texture, NULL, NULL, &a.w, &a.h);
+    SDL_QueryTexture(player.texture, NULL, NULL, &p.w, &p.h);
+
+    // (green, player.x - (a.w/2 - 35), player.y, a.w - 70, a.h);
+    double aTop = ast->y - a.h;
+    double aBot = ast->y + a.h;
+    double aLeft = ast->x - a.w;
+    double aRight = ast->x + a.w;
+    double pTop = player.y;
+    double pBot = player.y + p.h;
+    double pLeft = player.x - (p.w/2 - 35);
+    double pRight = player.x + (p.w/2 + 35);
+
+    if ((aTop < pTop && aBot > pTop) || (aTop < pBot && aBot > pBot))
     {
-        if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
+        if ((aLeft <= pLeft && aRight >= pLeft) || (aLeft <= pRight && aLeft >= pRight))
         {
             return 1;
         }
     }
 
     return 0;
-}
-
-// checks asteroid and player collisons
-void playerCollision()
-{
-
 }

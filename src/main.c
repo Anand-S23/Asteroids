@@ -26,6 +26,8 @@ void initGame()
     {
         createAsteroid(asteroids, 0);
     }
+
+    
 }
 
 void handleMovement()
@@ -102,35 +104,16 @@ void handleMovement()
 
 void collisions()
 {
-    // Collions
-    for (int i = 0; i < MAX_AST; ++i)
+    for (int i = 0; i < MAX_AST; ++i) 
     {
-        for (int j = 0; j < MAX_BULLETS; ++j)
+        //if (playerCollision(asteroids[i], player))
+        //{
+        //    player.health -= 10; 
+        //    printf("Hit\n");
+        //}
+        if (asteroids[i] && playerCollision(asteroids[i], player))
         {
-            if (bulletCollision(asteroids[i], bullets[j]))
-            {
-                printf("Collision\n");
-            }
-    //         if (bullets[j]->x == asteroids[i]->x && bullets[j]->y == asteroids[i]->y)
-    //         {
-    //             int size = asteroids[i]->size;
-
-    //             destroyBullet(bullets, j);
-    //             destroyAsteroid(asteroids, i);
-
-    //             if (size > 0)
-    //             {
-    //                 createAsteroid(asteroids, size - 1);
-    //                 createAsteroid(asteroids, size - 1);
-    //             }
-    //         }
-    //     }
-
-
-    //     if (player.x == asteroids[i]->x && player.y == asteroids[i]->y)
-    //     {
-    //         printf("Hit\n");
-    //         player.health -= 5;
+            printf("Has texture");
         }
     }
 }
@@ -149,6 +132,10 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green, SDL_Tex
     }
   
     blitPlayer(player.texture, player.x, player.y, player.angle);
+
+    SDL_Rect a, rect;
+    SDL_QueryTexture(player.texture, NULL, NULL, &a.w, &a.h);
+    blit(green, player.x - (a.w/2 - 35), player.y, a.w - 70, a.h);
 
     // loop through the list of Asteroid and blit
     for (int i = 0; i < MAX_AST; ++i)
@@ -208,7 +195,7 @@ int main(int argc, char* argv)
                 doInput();
                 handleMovement();
                 update(bgImg, health, green, red);
-                //collisions();
+                collisions();
                 presentScene();
                 SDL_Delay(16);
                 break;
