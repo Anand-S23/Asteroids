@@ -113,7 +113,7 @@ void destroyBullet(Bullet* bullets[], int pos)
 }
 
 // checks bullet and asteroid collisions 
-int bulletCollision(Asteroid* ast, Bullet* bullet)
+void bulletCollision(Asteroid* ast, Bullet* bullet)
 {
     SDL_Rect a, b;
 
@@ -130,26 +130,23 @@ int bulletCollision(Asteroid* ast, Bullet* bullet)
     double bRight = bullet->x + b.w;
 
 
-    // if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
-    // {
-    //     if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
-    //     {
-    //         return 1;
-    //     }
-    // }
-
-    return 1;
+    if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
+    {
+        if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
+        {
+           app.bulletCollision = 1;
+        }
+    }
 }
 
 // checks asteroid and player collisons
-int playerCollision(Asteroid* ast, Entity player)
+void playerCollision(Asteroid* ast, Entity player)
 {
     SDL_Rect a, p;
 
     SDL_QueryTexture(ast->texture, NULL, NULL, &a.w, &a.h);
     SDL_QueryTexture(player.texture, NULL, NULL, &p.w, &p.h);
 
-    // (green, player.x - (a.w/2 - 35), player.y, a.w - 70, a.h);
     double aTop = ast->y - a.h;
     double aBot = ast->y + a.h;
     double aLeft = ast->x - a.w;
@@ -163,9 +160,7 @@ int playerCollision(Asteroid* ast, Entity player)
     {
         if ((aLeft <= pLeft && aRight >= pLeft) || (aLeft <= pRight && aLeft >= pRight))
         {
-            return 1;
+            app.playerCollision = 1;
         }
     }
-
-    return 0;
 }

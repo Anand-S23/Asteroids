@@ -30,6 +30,8 @@ typedef struct {
     int left;
     int space;
     int screen;
+    int playerCollision;
+    int bulletCollision;
 } App;
 
 typedef struct entity {

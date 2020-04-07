@@ -106,14 +106,38 @@ void collisions()
 {
     for (int i = 0; i < MAX_AST; ++i) 
     {
-        //if (playerCollision(asteroids[i], player))
-        //{
-        //    player.health -= 10; 
-        //    printf("Hit\n");
-        //}
-        if (asteroids[i] && playerCollision(asteroids[i], player))
+        if (asteroids[i])
         {
-            printf("Has texture");
+            playerCollision(asteroids[i], player);
+            if (app.playerCollision)
+            {
+                player.health -= 1;
+                app.playerCollision = 0;
+            }
+        }
+
+        for (int j = 0; j < MAX_BULLETS; ++j)
+        {
+            if (asteroids[i] && bullets[j])
+            {
+                bulletCollision(asteroids[i], bullets[j]);
+
+                if (app.bulletCollision)
+                {
+                    double x = asteroids[i]->x;
+                    double y = asteroids[i]->y; 
+                    int size = asteroids[i]->size;
+
+                    destroyAsteroid(asteroids, i);
+                    destroyBullet(bullets, j);
+                    app.bulletCollision = 0;
+                    if (size > 0)
+                    {
+                        placeAsteroid(asteroids, x, y, size - 1);
+                        placeAsteroid(asteroids, x, y, size - 1);
+                    }
+                }
+            }
         }
     }
 }
