@@ -113,54 +113,61 @@ void destroyBullet(Bullet* bullets[], int pos)
 }
 
 // checks bullet and asteroid collisions 
-void bulletCollision(Asteroid* ast, Bullet* bullet)
+int bulletCollision(Asteroid* ast, Bullet* bullet)
 {
     SDL_Rect a, b;
 
     SDL_QueryTexture(ast->texture, NULL, NULL, &a.w, &a.h);
     SDL_QueryTexture(bullet->texture, NULL, NULL, &b.w, &b.h);
 
-    double aTop = ast->y - a.h;
-    double aBot = ast->y + a.h;
-    double aLeft = ast->x - a.w;
-    double aRight = ast->x + a.w;
-    double bTop = bullet->y - b.h;
-    double bBot = bullet->y + b.h;
-    double bLeft = bullet->x - b.w;
-    double bRight = bullet->x + b.w;
+    double aTop = ast->y - (a.h / 2) + 10;
+    double aBot = ast->y + (a.h / 2) - 10;
+    double aLeft = ast->x - (a.w / 2) + 10;
+    double aRight = ast->x + (a.w / 2) - 10;
+    double bTop = bullet->y - (b.h / 2);
+    double bBot = bullet->y + (b.h / 2);
+    double bLeft = bullet->x - (b.w / 2);
+    double bRight = bullet->x + (b.w / 2);
 
 
     if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
     {
         if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
         {
-           app.bulletCollision = 1;
+            return 1;
         }
     }
+
+    return 0;
 }
 
 // checks asteroid and player collisons
-void playerCollision(Asteroid* ast, Entity player)
+int playerCollision(Asteroid* ast, Entity player)
 {
     SDL_Rect a, p;
 
     SDL_QueryTexture(ast->texture, NULL, NULL, &a.w, &a.h);
     SDL_QueryTexture(player.texture, NULL, NULL, &p.w, &p.h);
 
-    double aTop = ast->y - a.h;
-    double aBot = ast->y + a.h;
-    double aLeft = ast->x - a.w;
-    double aRight = ast->x + a.w;
+    double aTop = ast->y - (a.h / 2) + 10;
+    double aBot = ast->y + (a.h / 2) - 10;
+    double aLeft = ast->x - (a.w / 2) + 10;
+    double aRight = ast->x + (a.w / 2) - 10;
     double pTop = player.y;
     double pBot = player.y + p.h;
     double pLeft = player.x - (p.w/2 - 35);
     double pRight = player.x + (p.w/2 + 35);
 
+    SDL_Rect rect = {pLeft, pTop, (p.w - 70), p.h};
+    SDL_RenderDrawRect(app.renderer, &rect);
+
     if ((aTop < pTop && aBot > pTop) || (aTop < pBot && aBot > pBot))
     {
         if ((aLeft <= pLeft && aRight >= pLeft) || (aLeft <= pRight && aLeft >= pRight))
         {
-            app.playerCollision = 1;
+            return 1;
         }
     }
+
+    return 0;
 }

@@ -20,6 +20,14 @@
 #define MAX_BULLETS 15
 #define RAD 3.14159265/180.0
 
+// Enums
+enum screenState {
+    MENU_SCREEN = 0,
+    GAME_SCREEN = 1,
+    FREEZE_SCREEN = 2, 
+    DEATH_SCREEN = 3
+};
+
 // Structs
 typedef struct {
     SDL_Renderer *renderer;
@@ -30,14 +38,12 @@ typedef struct {
     int left;
     int space;
     int screen;
-    int playerCollision;
-    int bulletCollision;
 } App;
 
 typedef struct entity {
     double x, y;
     double angle;
-    int health;
+    int lives;
     SDL_Texture *texture;
 } Entity;
 

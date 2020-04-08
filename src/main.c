@@ -1,19 +1,34 @@
 // Includes 
 #include "main.h"
 
-void initGame()
+void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
 {
-    // seeds the rand with time
-    srand(time(NULL));
+    blit(bgImg, 0, 0, 1280, 720);
+    blitRotated(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
 
-    CreateWindow("Asteroids", SCREEN_WIDTH, SCREEN_HEIGHT);
+    if (app.space == 1)
+    {
+        app.space = 0; 
+        app.screen = 1;
+    }
+}
+
+void reset() 
+{
+    for (int i = 0; i < MAX_AST; ++i)
+    {
+        asteroids[i] = NULL;
+    }
+
+    for (int i = 0; i < MAX_BULLETS; i++)
+    {
+        bullets[i] = NULL; 
+    }
 
     // Initializes the player
     player.x = SCREEN_WIDTH / 2;
     player.y = (3 * SCREEN_HEIGHT) / 4;
     player.angle = 0.0;
-    player.health = 100; 
-    player.texture = loadTexture("assests/playerShip2_blue.png");
 
     // Creates the initial asteroids -> 8 random (big or med) and 2 small
     for (int i = 0; i < 8; ++i) 
@@ -26,8 +41,19 @@ void initGame()
     {
         createAsteroid(asteroids, 0);
     }
+}
 
+void initGame()
+{
+    // seeds the rand with time
+    srand(time(NULL));
+
+    CreateWindow("Asteroids", SCREEN_WIDTH, SCREEN_HEIGHT);
     
+    reset();
+    player.lives = 3;
+    player.texture = loadTexture("assests/playerShip2_blue.png");
+    app.screen = 0;
 }
 
 void handleMovement()
@@ -106,43 +132,35 @@ void collisions()
 {
     for (int i = 0; i < MAX_AST; ++i) 
     {
-        if (asteroids[i])
+        if (asteroids[i] && playerCollision(asteroids[i], player))
         {
-            playerCollision(asteroids[i], player);
-            if (app.playerCollision)
-            {
-                player.health -= 1;
-                app.playerCollision = 0;
-            }
+            destroyAsteroid(asteroids, i);
+            player.lives--;
+            reset();
+            app.screen = 2;
         }
 
         for (int j = 0; j < MAX_BULLETS; ++j)
         {
-            if (asteroids[i] && bullets[j])
+            if (asteroids[i] && bullets[j] && bulletCollision(asteroids[i], bullets[j]))
             {
-                bulletCollision(asteroids[i], bullets[j]);
+                double x = asteroids[i]->x;
+                double y = asteroids[i]->y; 
+                int size = asteroids[i]->size;
 
-                if (app.bulletCollision)
+                destroyAsteroid(asteroids, i);
+                destroyBullet(bullets, j);
+                if (size > 0)
                 {
-                    double x = asteroids[i]->x;
-                    double y = asteroids[i]->y; 
-                    int size = asteroids[i]->size;
-
-                    destroyAsteroid(asteroids, i);
-                    destroyBullet(bullets, j);
-                    app.bulletCollision = 0;
-                    if (size > 0)
-                    {
-                        placeAsteroid(asteroids, x, y, size - 1);
-                        placeAsteroid(asteroids, x, y, size - 1);
-                    }
+                   placeAsteroid(asteroids, x, y, size - 1);
+                   placeAsteroid(asteroids, x, y, size - 1);
                 }
             }
         }
     }
 }
 
-void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green, SDL_Texture* red)
+void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Texture* green)
 {
     // Blits the bg, bullets, player and asteroids in that order
     blit(bgImg, 0, 0, 1280, 720);
@@ -151,40 +169,42 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* green, SDL_Tex
     {
         if (bullets[i])
         {
+            SDL_Rect b;
+            SDL_QueryTexture(bullets[i]->texture, NULL, NULL, &b.w, &b.h);
             blitRotated(bullets[i]->texture, bullets[i]->x, bullets[i]->y, bullets[i]->angle);
+            blit(green, bullets[i]->x - b.w / 2, bullets[i]->y - b.h / 2, b.w, b.h);
         }
     }
   
     blitPlayer(player.texture, player.x, player.y, player.angle);
 
-    SDL_Rect a, rect;
+    SDL_Rect a;
     SDL_QueryTexture(player.texture, NULL, NULL, &a.w, &a.h);
-    blit(green, player.x - (a.w/2 - 35), player.y, a.w - 70, a.h);
+    // blit(green, player.x - (a.w/2 - 35) * sin(player.angle * RAD), player.y * cos(player.angle * RAD), a.w - 70, a.h);
+    // SDL_Rect rect = {player.x - (a.w/2 - 35), player.y, (a.w - 70) * cos(player.angle*RAD), a.h*sin(player.angle*RAD)};
+    // SDL_RenderDrawRect(app.renderer, &rect);
 
     // loop through the list of Asteroid and blit
     for (int i = 0; i < MAX_AST; ++i)
     {
         if (asteroids[i])
         {
+            SDL_Rect a;
+            SDL_QueryTexture(asteroids[i]->texture, NULL, NULL, &a.w, &a.h);
             blitRotated(asteroids[i]->texture, asteroids[i]->x, asteroids[i]->y, asteroids[i]->angle);
+            blit(green, asteroids[i]->x - a.w / 2 + 10, asteroids[i]->y - a.h / 2 + 10, a.w - 20, a.h - 20);
         }
     }
 
     blitRotated(health, 25.0, 25.0, 0.0);
-    blit(red, 48, 8, 102*3, 34);
-    blit(green, 51, 10, player.health*3, 30);
+    if (player.lives >= 1) { blitRotated(life, 70.0, 25.0, 0.0); }
+    if (player.lives >= 2) { blitRotated(life, 120.0, 25.0, 0.0); }
+    if (player.lives == 3) { blitRotated(life, 170.0, 25.0, 0.0); }
 }
 
-void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
+void checkPlay()
 {
-    blit(bgImg, 0, 0, 1280, 720);
-    blitRotated(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
-
-    if (app.space == 1)
-    {
-        app.space = 0; 
-        app.screen = 1;
-    }
+    if (app.space) { app.screen = 1; }
 }
 
 // Main Loop 
@@ -197,9 +217,8 @@ int main(int argc, char* argv)
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
     SDL_Texture* health = loadTexture("assests/heart.png");
+    SDL_Texture* life = loadTexture("assests/playerLife2_blue.png");
     SDL_Texture* green = loadTexture("assests/green.png");
-    SDL_Texture* red = loadTexture("assests/red.png");
-    app.screen = 0;
 	
     atexit(cleanup);
 	
@@ -207,23 +226,32 @@ int main(int argc, char* argv)
     {
         switch(app.screen)
         {
-            case 0: 
+            case MENU_SCREEN: 
                 prepareScene();
                 doInput();
                 gameMenu(bgImg, title);
                 presentScene();
                 SDL_Delay(16);
                 break;
-            case 1:
+            case GAME_SCREEN:
                 prepareScene();
                 doInput();
                 handleMovement();
-                update(bgImg, health, green, red);
+                update(bgImg, health, life, green);
                 collisions();
                 presentScene();
                 SDL_Delay(16);
                 break;
-            case 2: 
+            case FREEZE_SCREEN: 
+                prepareScene();
+                doInput();
+                checkPlay();
+                update(bgImg, health, life, green);
+                collisions();
+                prepareScene();
+                SDL_Delay(16);
+                break;
+            case DEATH_SCREEN: 
                 break;
         }
     }
