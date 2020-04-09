@@ -1,18 +1,6 @@
 // Includes 
 #include "main.h"
 
-void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
-{
-    blit(bgImg, 0, 0, 1280, 720);
-    blitRotated(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
-
-    if (app.space == 1)
-    {
-        app.space = 0; 
-        app.screen = 1;
-    }
-}
-
 void reset() 
 {
     for (int i = 0; i < MAX_AST; ++i)
@@ -54,6 +42,19 @@ void initGame()
     player.lives = 3;
     player.texture = loadTexture("assests/playerShip2_blue.png");
     app.screen = 0;
+    app.score = 0;
+}
+
+void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
+{
+    blit(bgImg, 0, 0, 1280, 720);
+    blitRotated(title, SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0, 0.0);
+
+    if (app.space == 1)
+    {
+        app.space = 0; 
+        app.screen = 1;
+    }
 }
 
 void handleMovement()
@@ -155,6 +156,10 @@ void collisions()
                    placeAsteroid(asteroids, x, y, size - 1);
                    placeAsteroid(asteroids, x, y, size - 1);
                 }
+
+                if (size == 0) { app.score += 800; }
+                if (size == 1) { app.score += 400; }
+                if (size == 2) { app.score += 200; }
             }
         }
     }

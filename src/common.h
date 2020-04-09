@@ -38,6 +38,7 @@ typedef struct {
     int left;
     int space;
     int screen;
+    int score;
 } App;
 
 typedef struct entity {
