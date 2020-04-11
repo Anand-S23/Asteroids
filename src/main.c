@@ -205,11 +205,24 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Text
     if (player.lives >= 1) { blitRotated(life, 70.0, 25.0, 0.0); }
     if (player.lives >= 2) { blitRotated(life, 120.0, 25.0, 0.0); }
     if (player.lives == 3) { blitRotated(life, 170.0, 25.0, 0.0); }
+
+    if (player.lives == 0) 
+    { 
+        addScore(app.score); 
+        app.screen = 3; 
+        reset();
+    }
 }
 
-void checkPlay()
+void checkPlay(int state)
 {
-    if (app.space) { app.screen = 1; }
+    if (app.space && state == 2) { app.screen = 1; }
+    if (app.space && state == 3) { app.screen = 0; }
+}
+
+void scoreScreen()
+{
+    // @TODO: Read from score files and display the top 5 high-scores
 }
 
 // Main Loop 
@@ -250,13 +263,19 @@ int main(int argc, char* argv)
             case FREEZE_SCREEN: 
                 prepareScene();
                 doInput();
-                checkPlay();
+                checkPlay(2);
                 update(bgImg, health, life, green);
                 collisions();
                 prepareScene();
                 SDL_Delay(16);
                 break;
             case DEATH_SCREEN: 
+                prepareScene();
+                doInput();
+                checkPlay(2);
+                scoreScreen();
+                prepareScene();
+                SDL_Delay(16);
                 break;
         }
     }

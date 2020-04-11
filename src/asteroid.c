@@ -171,3 +171,59 @@ int playerCollision(Asteroid* ast, Entity player)
 
     return 0;
 }
+
+// Hi-Score 
+void sortScores(int* scores)
+{
+    for (int i = 0; i < 6; ++i)
+    {
+        int key = scores[i];
+        int pos = i - 1;
+
+        while(pos >= 0 && scores[pos] > key)
+        {
+            scores[pos+1] = scores[pos];
+            pos -= 1;
+        }
+    }
+}
+
+void addScore(int score)
+{
+    int num;
+    int scores[6];
+    FILE* input = fopen("scores.dat", "r");
+	if (input == NULL)
+	{
+		printf("Could not open file");
+		return;
+	}
+
+    for (int i = 0; i < 5; ++i)
+    {
+        fscanf(input, "%d", &num);
+        scores[i] = num;
+    }
+
+    scores[5] = score;
+    sortScores(scores);
+	scoreLogger(scores);
+	fclose(input);
+}
+
+void scoreLogger(int* scores)
+{
+	FILE* input = fopen("scores.dat", "w");
+	if (input == NULL)
+	{
+		printf("Could not open file");
+		return;
+	}
+
+	for (int i = 0; i < 5; ++i)
+    {
+        fprintf(input,"%d",scores[i]);
+    }
+	
+	fclose(input);
+}
