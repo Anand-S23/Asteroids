@@ -9,8 +9,8 @@
 // SDL2
 #include "SDL.h"
 #include "SDL_image.h"
-//#include "SDL_mixer.h"
-//#include "SDL_ttf.h"
+#include "SDL_mixer.h"
+#include "SDL_ttf.h"
  
 // Definition 
 #define SCREEN_WIDTH   1280

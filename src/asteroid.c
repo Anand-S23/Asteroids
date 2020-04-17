@@ -129,14 +129,43 @@ int bulletCollision(Asteroid* ast, Bullet* bullet)
     double bLeft = bullet->x - (b.w / 2);
     double bRight = bullet->x + (b.w / 2);
 
+    // vertex -> (x, y) = (bLeft, bTop) - (bRight, bTop) - (bLeft, bBot) - (bRight, bBot)
+    // x' = x*cos(t) - y*sin(t)
+    // y' = x*sin(t) + y*cos(t)
+    double c1x = bLeft*cos(bullet->angle*RAD) - bTop*sin(bullet->angle*RAD); 
+    double c1y = bLeft*sin(bullet->angle*RAD) + bTop*cos(bullet->angle*RAD); 
 
-    if ((aTop < bTop && aBot > bTop) || (aTop < bBot && aBot > bBot))
+    double c2x = bRight*cos(bullet->angle*RAD) - bTop*sin(bullet->angle*RAD); 
+    double c2y = bRight*sin(bullet->angle*RAD) + bTop*cos(bullet->angle*RAD); 
+
+    double c3x = bLeft*cos(bullet->angle*RAD) - bBot*sin(bullet->angle*RAD); 
+    double c3y = bLeft*sin(bullet->angle*RAD) + bBot*cos(bullet->angle*RAD); 
+
+    double c4x = bRight*cos(bullet->angle*RAD) - bBot*sin(bullet->angle*RAD); 
+    double c4y = bRight*sin(bullet->angle*RAD) + bBot*cos(bullet->angle*RAD); 
+
+    SDL_RenderDrawPoint(app.renderer, c1x, c1y);
+    SDL_RenderDrawPoint(app.renderer, c2x, c2y);
+    SDL_RenderDrawPoint(app.renderer, c3x, c3y);
+    SDL_RenderDrawPoint(app.renderer, c4x, c4y);
+
+    if ((aTop < c1y && aBot > c1y) && (aLeft < c1x && aRight > c1x))
     {
-        if ((aLeft <= bLeft && aRight >= bLeft) || (aLeft <= bRight && aLeft >= bRight))
-        {
-            return 1;
-        }
+        return 1;
     }
+    else if ((aTop < c2y && aBot > c2y) && (aLeft < c2x && aRight > c2x))
+    {
+        return 1; 
+    }
+    else if ((aTop < c3y && aBot > c3y) && (aLeft < c3x && aRight > c3x))
+    {
+        return 1; 
+    }
+    else if ((aTop < c4y && aBot > c4y) && (aLeft < c4x && aRight > c4x))
+    {
+        return 1; 
+    }
+
 
     return 0;
 }
@@ -156,17 +185,43 @@ int playerCollision(Asteroid* ast, Entity player)
     double pTop = player.y;
     double pBot = player.y + p.h;
     double pLeft = player.x - (p.w/2 - 35);
-    double pRight = player.x + (p.w/2 + 35);
+    double pRight = player.x + (p.w/2);
 
-    SDL_Rect rect = {pLeft, pTop, (p.w - 70), p.h};
-    SDL_RenderDrawRect(app.renderer, &rect);
+    double c1x = pLeft*cos(player.angle*RAD) - pTop*sin(player.angle*RAD); 
+    double c1y = pLeft*sin(player.angle*RAD) + pTop*cos(player.angle*RAD); 
 
-    if ((aTop < pTop && aBot > pTop) || (aTop < pBot && aBot > pBot))
+    double c2x = pRight*cos(player.angle*RAD) - pTop*sin(player.angle*RAD); 
+    double c2y = pRight*sin(player.angle*RAD) + pTop*cos(player.angle*RAD); 
+
+    double c3x = pLeft*cos(player.angle*RAD) - pBot*sin(player.angle*RAD); 
+    double c3y = pLeft*sin(player.angle*RAD) + pBot*cos(player.angle*RAD); 
+
+    double c4x = pRight*cos(player.angle*RAD) - pBot*sin(player.angle*RAD); 
+    double c4y = pRight*sin(player.angle*RAD) + pBot*cos(player.angle*RAD);
+
+    //SDL_Rect rect = {pLeft, pTop, (p.w - 70), p.h};
+    //SDL_RenderDrawRect(app.renderer, &rect);
+
+    SDL_RenderDrawPoint(app.renderer, c1x, c1y);
+    SDL_RenderDrawPoint(app.renderer, c2x, c2y);
+    SDL_RenderDrawPoint(app.renderer, c3x, c3y);
+    SDL_RenderDrawPoint(app.renderer, c4x, c4y);
+
+    if ((aTop < c1y && aBot > c1y) && (aLeft < c1x && aRight > c1x))
     {
-        if ((aLeft <= pLeft && aRight >= pLeft) || (aLeft <= pRight && aLeft >= pRight))
-        {
-            return 1;
-        }
+        return 0;
+    }
+    else if ((aTop < c2y && aBot > c2y) && (aLeft < c2x && aRight > c2x))
+    {
+        return 0; 
+    }
+    else if ((aTop < c3y && aBot > c3y) && (aLeft < c3x && aRight > c3x))
+    {
+        return 0; 
+    }
+    else if ((aTop < c4y && aBot > c4y) && (aLeft < c4x && aRight > c4x))
+    {
+        return 0; 
     }
 
     return 0;
@@ -186,6 +241,23 @@ void sortScores(int* scores)
             pos -= 1;
         }
     }
+}
+
+void scoreLogger(int* scores)
+{
+	FILE* input = fopen("scores.dat", "w");
+	if (input == NULL)
+	{
+		printf("Could not open file");
+		return;
+	}
+
+	for (int i = 0; i < 5; ++i)
+    {
+        fprintf(input,"%d", scores[i]);
+    }
+	
+	fclose(input);
 }
 
 void addScore(int score)
@@ -211,19 +283,3 @@ void addScore(int score)
 	fclose(input);
 }
 
-void scoreLogger(int* scores)
-{
-	FILE* input = fopen("scores.dat", "w");
-	if (input == NULL)
-	{
-		printf("Could not open file");
-		return;
-	}
-
-	for (int i = 0; i < 5; ++i)
-    {
-        fprintf(input,"%d",scores[i]);
-    }
-	
-	fclose(input);
-}

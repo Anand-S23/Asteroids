@@ -177,7 +177,7 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Text
             SDL_Rect b;
             SDL_QueryTexture(bullets[i]->texture, NULL, NULL, &b.w, &b.h);
             blitRotated(bullets[i]->texture, bullets[i]->x, bullets[i]->y, bullets[i]->angle);
-            blit(green, bullets[i]->x - b.w / 2, bullets[i]->y - b.h / 2, b.w, b.h);
+            //blit(green, bullets[i]->x - b.w / 2, bullets[i]->y - b.h / 2, b.w, b.h);
         }
     }
   
@@ -210,7 +210,7 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Text
     { 
         addScore(app.score); 
         app.screen = 3; 
-        reset();
+        reset();  
     }
 }
 
