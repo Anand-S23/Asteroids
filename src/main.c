@@ -76,6 +76,7 @@ void handleMovement()
     if (app.space)
     {
         createBullet(bullets, player.x, player.y, player.angle);
+        Mix_PlayChannel(-1, app.shot, 0);
         app.space = 0;
     }
 
@@ -232,11 +233,23 @@ int main(int argc, char* argv)
     memset(&player, 0, sizeof(Entity));
 
     initGame();
+    app.music = Mix_LoadMUS("assests/ObservingTheStar.ogg");
+    app.shot = Mix_LoadWAV("assests/sfx_laser2.ogg");
+    Mix_PlayMusic(app.music, -1);
+
+    app.font = TTF_OpenFont( "assests/kenvector_future.ttf", 28 );
+
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
     SDL_Texture* health = loadTexture("assests/heart.png");
     SDL_Texture* life = loadTexture("assests/playerLife2_blue.png");
     SDL_Texture* green = loadTexture("assests/green.png");
+
+    /*SDL_Color textColor = { 255, 255, 255 };
+    char buffer [33];
+    itoa(app.score, buffer, 10);
+    app.scoreDisplay = TTF_RenderText_Solid( app.font, buffer, textColor);
+    if (GAME_SCREEN) { apply_surface(0, 150, app.scoreDisplay, app.renderer); }*/
 	
     atexit(cleanup);
 	

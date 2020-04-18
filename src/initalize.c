@@ -32,14 +32,16 @@ void CreateWindow(char* name, int screenWidth, int screenHeight)
 	}
 
 	IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+	
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+	TTF_Init();
 }
 
 // Cleans up before exiting
 void cleanup(void)
 {
 	SDL_DestroyRenderer(app.renderer);
-	
 	SDL_DestroyWindow(app.window);
-	
 	SDL_Quit();
 }

@@ -39,6 +39,10 @@ typedef struct {
     int space;
     int screen;
     int score;
+    Mix_Music *music; 
+    Mix_Chunk *shot; 
+    TTF_Font *font;
+    SDL_Surface *scoreDisplay;
 } App;
 
 typedef struct entity {
