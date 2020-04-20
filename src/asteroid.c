@@ -207,21 +207,23 @@ int playerCollision(Asteroid* ast, Entity player)
     SDL_RenderDrawPoint(app.renderer, c3x, c3y);
     SDL_RenderDrawPoint(app.renderer, c4x, c4y);
 
+    int retval = 1;
+
     if ((aTop < c1y && aBot > c1y) && (aLeft < c1x && aRight > c1x))
     {
-        return 0;
+        return retval;
     }
     else if ((aTop < c2y && aBot > c2y) && (aLeft < c2x && aRight > c2x))
     {
-        return 0; 
+        return retval; 
     }
     else if ((aTop < c3y && aBot > c3y) && (aLeft < c3x && aRight > c3x))
     {
-        return 0; 
+        return retval; 
     }
     else if ((aTop < c4y && aBot > c4y) && (aLeft < c4x && aRight > c4x))
     {
-        return 0; 
+        return retval; 
     }
 
     return 0;

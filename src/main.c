@@ -138,8 +138,18 @@ void collisions()
         {
             destroyAsteroid(asteroids, i);
             player.lives--;
+            //printf("%d\n", player.lives);
             reset();
-            app.screen = 2;
+            if (player.lives < 0) 
+            { 
+                addScore(app.score); 
+                app.screen = 3; 
+            }
+            else
+            {
+                app.screen = 2;
+            }
+            printf("%d\n", app.screen);
         }
 
         for (int j = 0; j < MAX_BULLETS; ++j)
@@ -206,13 +216,6 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Text
     if (player.lives >= 1) { blitRotated(life, 70.0, 25.0, 0.0); }
     if (player.lives >= 2) { blitRotated(life, 120.0, 25.0, 0.0); }
     if (player.lives == 3) { blitRotated(life, 170.0, 25.0, 0.0); }
-
-    if (player.lives == 0) 
-    { 
-        addScore(app.score); 
-        app.screen = 3; 
-        reset();  
-    }
 }
 
 void checkPlay(int state)
@@ -221,9 +224,10 @@ void checkPlay(int state)
     if (app.space && state == 3) { app.screen = 0; }
 }
 
-void scoreScreen()
+void scoreScreen(SDL_Texture* over, SDL_Texture* green)
 {
-    // @TODO: Read from score files and display the top 5 high-scores
+    blit(over, 0, 0, 1280, 720);
+    blit(green, 100, 100, 100, 100);
 }
 
 // Main Loop 
@@ -244,6 +248,7 @@ int main(int argc, char* argv)
     SDL_Texture* health = loadTexture("assests/heart.png");
     SDL_Texture* life = loadTexture("assests/playerLife2_blue.png");
     SDL_Texture* green = loadTexture("assests/green.png");
+    SDL_Texture* over = loadTexture("assests/gameOver.png");
 
     /*SDL_Color textColor = { 255, 255, 255 };
     char buffer [33];
@@ -278,17 +283,22 @@ int main(int argc, char* argv)
                 doInput();
                 checkPlay(2);
                 update(bgImg, health, life, green);
-                collisions();
+                //collisions();
                 prepareScene();
                 SDL_Delay(16);
                 break;
             case DEATH_SCREEN: 
                 prepareScene();
                 doInput();
-                checkPlay(2);
-                scoreScreen();
+                checkPlay(3);
+                scoreScreen(over, green);
                 prepareScene();
                 SDL_Delay(16);
+                break;
+            case test: 
+                prepareScene();
+                doInput();
+                prepareScene();
                 break;
         }
     }
