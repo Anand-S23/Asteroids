@@ -26,7 +26,6 @@ enum screenState {
     GAME_SCREEN = 1,
     FREEZE_SCREEN = 2, 
     DEATH_SCREEN = 3,
-    test = 4,
 };
 
 // Structs

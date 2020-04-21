@@ -149,7 +149,7 @@ void collisions()
             {
                 app.screen = 2;
             }
-            printf("%d\n", app.screen);
+            //printf("%d\n", app.screen);
         }
 
         for (int j = 0; j < MAX_BULLETS; ++j)
@@ -224,10 +224,9 @@ void checkPlay(int state)
     if (app.space && state == 3) { app.screen = 0; }
 }
 
-void scoreScreen(SDL_Texture* over, SDL_Texture* green)
+void scoreScreen(SDL_Texture* over)
 {
-    blit(over, 0, 0, 1280, 720);
-    blit(green, 100, 100, 100, 100);
+    blit(over, -1, 0, 1280, 720);
 }
 
 // Main Loop 
@@ -283,7 +282,6 @@ int main(int argc, char* argv)
                 doInput();
                 checkPlay(2);
                 update(bgImg, health, life, green);
-                //collisions();
                 prepareScene();
                 SDL_Delay(16);
                 break;
@@ -291,14 +289,9 @@ int main(int argc, char* argv)
                 prepareScene();
                 doInput();
                 checkPlay(3);
-                scoreScreen(over, green);
-                prepareScene();
+                scoreScreen(over);
+                presentScene();
                 SDL_Delay(16);
-                break;
-            case test: 
-                prepareScene();
-                doInput();
-                prepareScene();
                 break;
         }
     }
