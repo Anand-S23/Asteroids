@@ -42,7 +42,7 @@ typedef struct {
     Mix_Music *music; 
     Mix_Chunk *shot; 
     TTF_Font *font;
-    SDL_Surface *scoreDisplay;
+    //SDL_Surface *scoreDisplay;
 } App;
 
 typedef struct entity {

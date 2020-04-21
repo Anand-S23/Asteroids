@@ -43,6 +43,17 @@ void initGame()
     player.texture = loadTexture("assests/playerShip2_blue.png");
     app.screen = 0;
     app.score = 0;
+    app.font = TTF_OpenFont("assests/kenvector_future_thin.ttf", 32);
+}
+
+void gameRest() 
+{
+    reset();
+    player.lives = 3;
+    player.texture = loadTexture("assests/playerShip2_blue.png");
+    app.screen = 0;
+    app.score = 0;
+    app.font = TTF_OpenFont("assests/kenvector_future_thin.ttf", 32);
 }
 
 void gameMenu(SDL_Texture* bgImg, SDL_Texture* title)
@@ -140,7 +151,7 @@ void collisions()
             player.lives--;
             //printf("%d\n", player.lives);
             reset();
-            if (player.lives < 0) 
+            if (player.lives <= 0) 
             { 
                 addScore(app.score); 
                 app.screen = 3; 
@@ -216,12 +227,19 @@ void update(SDL_Texture* bgImg, SDL_Texture* health, SDL_Texture* life, SDL_Text
     if (player.lives >= 1) { blitRotated(life, 70.0, 25.0, 0.0); }
     if (player.lives >= 2) { blitRotated(life, 120.0, 25.0, 0.0); }
     if (player.lives == 3) { blitRotated(life, 170.0, 25.0, 0.0); }
+
+    SDL_Color textColor = { 255, 255, 255 };
+    char text [33];
+    itoa(app.score, text, 10);
+    SDL_Surface* scoreDisplay = TTF_RenderText_Solid(app.font, text, textColor);
+    SDL_Texture* scoreTexture = SDL_CreateTextureFromSurface(app.renderer, scoreDisplay);
+    blitRotated(scoreTexture, 1200.0, 25.0, 0);
 }
 
 void checkPlay(int state)
 {
     if (app.space && state == 2) { app.screen = 1; }
-    if (app.space && state == 3) { app.screen = 0; }
+    if (app.space && state == 3) { gameRest(); app.screen = 0; }
 }
 
 void scoreScreen(SDL_Texture* over)
@@ -240,20 +258,12 @@ int main(int argc, char* argv)
     app.shot = Mix_LoadWAV("assests/sfx_laser2.ogg");
     Mix_PlayMusic(app.music, -1);
 
-    app.font = TTF_OpenFont( "assests/kenvector_future.ttf", 28 );
-
     SDL_Texture* title = loadTexture("assests/title.png");
     SDL_Texture* bgImg = loadTexture("assests/space-2.png");
     SDL_Texture* health = loadTexture("assests/heart.png");
     SDL_Texture* life = loadTexture("assests/playerLife2_blue.png");
     SDL_Texture* green = loadTexture("assests/green.png");
     SDL_Texture* over = loadTexture("assests/gameOver.png");
-
-    /*SDL_Color textColor = { 255, 255, 255 };
-    char buffer [33];
-    itoa(app.score, buffer, 10);
-    app.scoreDisplay = TTF_RenderText_Solid( app.font, buffer, textColor);
-    if (GAME_SCREEN) { apply_surface(0, 150, app.scoreDisplay, app.renderer); }*/
 	
     atexit(cleanup);
 	

@@ -230,18 +230,18 @@ int playerCollision(Asteroid* ast, Entity player)
 }
 
 // Hi-Score 
-void sortScores(int* scores)
+void sortScores(int* scores, int newScore)
 {
-    for (int i = 0; i < 6; ++i)
+    // @TODO: Optimize sorting
+    int current = newScore;
+    for (int i = 0; i < 5; ++i)
     {
-        int key = scores[i];
-        int pos = i - 1;
-
-        while(pos >= 0 && scores[pos] > key)
-        {
-            scores[pos+1] = scores[pos];
-            pos -= 1;
-        }
+        if (scores[i] < current)
+        {   
+            int temp = scores[i];
+            scores[i] = current;
+            current = temp;
+        }       
     }
 }
 
@@ -256,7 +256,7 @@ void scoreLogger(int* scores)
 
 	for (int i = 0; i < 5; ++i)
     {
-        fprintf(input,"%d", scores[i]);
+        fprintf(input,"%d\n", scores[i]);
     }
 	
 	fclose(input);
@@ -265,7 +265,7 @@ void scoreLogger(int* scores)
 void addScore(int score)
 {
     int num;
-    int scores[6];
+    int scores[5];
     FILE* input = fopen("scores.dat", "r");
 	if (input == NULL)
 	{
@@ -280,8 +280,41 @@ void addScore(int score)
     }
 
     scores[5] = score;
-    sortScores(scores);
+
+    // for (int i = 0; i < 6; ++i)
+    // {
+    //     printf("%d\n", scores[i]);
+    // }
+
+    sortScores(scores, score);
 	scoreLogger(scores);
 	fclose(input);
 }
 
+char* readScores()
+{
+    char scores[5];
+
+    int c;
+    char t[100];
+    FILE* input;
+
+    input = fopen("scores.dat", "r");
+
+    if (input == NULL)
+    {
+        printf("Error, cannot read to file.");
+        exit(1);
+    }
+
+    c = fscanf(input, "%s", t);
+
+    while (c != EOF)
+    {
+        printf("%s ", t);
+        c = fscanf(input, "%s", t);
+    }
+
+
+    return scores;
+}

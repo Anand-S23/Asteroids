@@ -36,6 +36,8 @@ void CreateWindow(char* name, int screenWidth, int screenHeight)
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	TTF_Init();
+	//if (!TTF_Init())
+	//	printf("%s\n", SDL_GetError());
 }
 
 // Cleans up before exiting
@@ -43,5 +45,6 @@ void cleanup(void)
 {
 	SDL_DestroyRenderer(app.renderer);
 	SDL_DestroyWindow(app.window);
+	TTF_Quit();
 	SDL_Quit();
 }
