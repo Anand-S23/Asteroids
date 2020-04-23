@@ -21,6 +21,8 @@ extern int playerCollision(Asteroid* ast, Entity player);
 extern void sortScores(int* scores); 
 extern void addScore(int score);
 extern void scoreLogger(int* scores);
+extern void readScores(int* scores);
+extern SDL_Texture* showScore(SDL_Color textColor, int score);
 
 App app;
 Entity player;

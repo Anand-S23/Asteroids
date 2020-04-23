@@ -291,12 +291,9 @@ void addScore(int score)
 	fclose(input);
 }
 
-char* readScores()
+void readScores(int* scores)
 {
-    char scores[5];
-
     int c;
-    char t[100];
     FILE* input;
 
     input = fopen("scores.dat", "r");
@@ -304,17 +301,20 @@ char* readScores()
     if (input == NULL)
     {
         printf("Error, cannot read to file.");
-        exit(1);
     }
 
-    c = fscanf(input, "%s", t);
-
-    while (c != EOF)
+    for (int i = 0; i < 5; ++i)
     {
-        printf("%s ", t);
-        c = fscanf(input, "%s", t);
+        c = fscanf(input, "%d", &scores[i]);
     }
+}
 
-
-    return scores;
+SDL_Texture* showScore(SDL_Color textColor, int score)
+{
+    char text[20];
+    itoa(score, text, 10);
+    SDL_Surface* scoreDisplay = TTF_RenderText_Solid(app.font, text, textColor);
+    SDL_Texture* scoreTexture = SDL_CreateTextureFromSurface(app.renderer, scoreDisplay);
+    
+    return scoreTexture;
 }

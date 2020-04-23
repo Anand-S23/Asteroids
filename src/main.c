@@ -245,6 +245,18 @@ void checkPlay(int state)
 void scoreScreen(SDL_Texture* over)
 {
     blit(over, -1, 0, 1280, 720);
+
+    SDL_Color textColor = { 255, 255, 255 };
+    
+    int scores[5];
+    readScores(scores);
+
+    blitRotated(showScore(textColor, scores[0]), 500, 250, 0);
+    blitRotated(showScore(textColor, scores[1]), 500, 300, 0);
+    blitRotated(showScore(textColor, scores[2]), 500, 350, 0);
+    blitRotated(showScore(textColor, scores[3]), 500, 400, 0);
+    blitRotated(showScore(textColor, scores[4]), 500, 450, 0);
+
 }
 
 // Main Loop 
