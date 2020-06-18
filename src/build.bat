@@ -19,8 +19,8 @@ set SDL2_MIXINC=%SDL2_MIX%\include
 set SDL2_TTFINC=%SDL2_TTF%\include
 
 
-if not exist ..\..\build mkdir ..\..\build
-pushd ..\..\build
+if not exist ..\..\build-ast mkdir ..\..\build-ast
+pushd ..\..\build-ast
 
 robocopy %SDL2_LIBDIR% . *.dll
 robocopy %SDL2_IMGDIR% . *.dll
